@@ -300,9 +300,14 @@
         <form class="membershipForm" action="/join" method="POST"> 
 
             <div class="formst">
-                <label for="ID">아이디</label>
-                <input type="text" id="ID" name="ID" placeholder="(영문 대소문자/숫자 5자)" required>
+            <label for="ID">아이디</label>
+            <div class="d-flex gap-2">
+                <input type="text" id="ID" name="ID" class="form-control" placeholder="(영문 대소문자/숫자 5자)" required>
+                <button type="button" id="idCheckBtn" class="btn" style="background-color: #474747; border-color: #474747;
+                color: white; width: 120px; height:25px; font-size:12px;">중복 확인</button>
             </div>
+            <small id="id-message" class="form-text"></small>
+        </div>
 
             <div class="formst">
                 <label for="PWD">비밀번호</label>
@@ -426,6 +431,112 @@
                 agreeAll.checked = allChecked;
             });
         });
+
+
+        // 회원가입 시 아이디와 비밀번호의 길이가 조건에 맞게 입력 되었는지 확인하는 기능.
+        // 검사할 대상들을 변수로 지정
+        const form = document.querySelector('.membershipForm');
+        const idInput = document.getElementById('ID');
+        const pwdInput = document.getElementById('PWD');
+        const pwdCheckInput = document.getElementById('PWD_check');
+        const idMessage = document.getElementById('id-message');  // 아이디 중복 확인용 변수
+        const idCheckBtn = document.getElementById('idCheckBtn');
+        let Idchecked = false; // 아이디 중복 확인 통과 여부를 저장하는 변수. / let으로 선언한 변수는 나중에 값을 바꿀 수 있는 변수고,
+                                                                        // const로 선언한 변수는 나중에 값을 바꿀 수 없는 변수다.
+
+        // '중복 확인' 버튼 클릭 시
+        idCheckBtn.addEventListener('click', async function() {
+            const userId = idInput.value;
+
+            // 아이디 길이 검사
+            if (userId.length < 5) {
+                idMessage.textContent = '아이디는 5자 이상 입력해주세요.';
+                idMessage.style.color = 'red';
+                isIdChecked = false;
+                return;
+            }
+
+            try {
+                // fetch를 사용해 서버로 아이디 전송 (fetch : 백엔드와 데이터를 주고 받을 수 있게 함. (/join/check-id로 post 방식의 요청을 보냄.))
+                const response = await fetch('/join/check-id', {  // await : 서버가 응답할때까지 기다림.
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'ID=' + encodeURIComponent(userId)  // id라는 이름으로 사용자가 입력한 userId 값을 서버에 보냄.
+                });
+
+                // 서버로부터 JSON 응답을 받음  (json : 데이터를 주고 받을 떄 사용하는 텍스트 형식, key, value 형태의 데이터.)
+                const result = await response.json();
+
+                // 응답에 따라 메시지 표시
+                if (result.available) {
+                    idMessage.textContent = '사용 가능한 아이디입니다.';
+                    idMessage.style.color = 'green';
+                    isIdChecked = true; // 중복 확인 통과
+                } else {
+                    idMessage.textContent = '이미 사용 중이거나 사용할 수 없는 아이디입니다.';
+                    idMessage.style.color = 'red';
+                    isIdChecked = false;
+                }
+
+            } catch (error) {   // try 블럭 안에 예상치 못한 오류에 대한 대처 catch 함수.
+                console.error('Error:', error);
+                idMessage.textContent = '오류가 발생했습니다. 다시 시도해주세요.';
+                idMessage.style.color = 'red';
+                isIdChecked = false;
+            }
+        });
+
+        // 아이디 입력창의 내용이 변경되면, '중복 확인'을 다시 하도록 상태 변경
+        idInput.addEventListener('input', function() {
+            isIdChecked = false; 
+            idMessage.textContent = '아이디 입력 후 중복 확인을 해주세요.';
+            idMessage.style.color = 'grey';
+        });
+
+
+
+        // 폼에서 join 버튼을 클릭할 떄마다 내부의 함수를 실행하도록 함.
+        form.addEventListener('submit', function(event) {
+            
+            // 아이디 길이 검사 - 아이디의 길이가 5자 이상이 조건이니까, idInput이 5자 미만일 때, 아래의 경고창을 띄운다.
+            if (idInput.value.length < 5) {    // 아이디의 길이가 5 미만이면.
+                alert('아이디는 5자 이상 입력해주세요.');   // alert() : 사용자에게 경고창을 띄움
+                event.preventDefault(); // event.preventDefault() : 폼을 서버로 제출하는 것을 중단시키는 함수다.
+                idInput.focus(); // 마우스 커서를 문제가 된 입력창으로 자동 이동 시킨다.
+                return; // 검사 중단
+            }
+
+            // 비밀번호 길이 검사 - 4자 이상, 16자 이하의 비밀번호 설정이 조건이어서, 4자 미만, 16자 초과일 때 아래의 경고창을 띄운다.
+            if (pwdInput.value.length < 4 || pwdInput.value.length > 16) {   // pwdinput의 길이가 4 미만, 16자 초과일 시.
+                alert('비밀번호는 4자 이상 16자 이하로 입력해주세요.');   // 경고창
+                event.preventDefault(); // 폼 제출을 막음
+                pwdInput.focus(); // 비밀번호 입력창에 포커스
+                return; // 검사 중단
+            }
+
+
+            // 회원가입할 때 비밀번호 재검사에 입력한 비밀번호가 서로 일치하는지 확인하는 기능.
+            if (pwdInput.value !== pwdCheckInput.value) {   // 비밀번호와 비밀번호검사(pwdCheckInput)이 서로 일치하지 않다면,
+                alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요.');    // 경고창
+                event.preventDefault(); // 폼 제출을 막음
+                pwdCheckInput.value = ''; // 비밀번호 확인 필드를 비움
+                pwdCheckInput.focus(); // 비밀번호 확인창에 포커스
+                return; // 검사 중단
+            }
+
+            if (isIdChecked === false) {
+                alert('아이디 중복 확인을 완료해주세요.');
+                event.preventDefault();
+                idInput.focus();
+                return;
+            }
+            
+            // 모든 검사를 통과하면 폼이 정상적으로 제출됨 (action="/join")
+        });
+
+
     </script>
 </body>
 </html>

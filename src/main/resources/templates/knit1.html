@@ -1,0 +1,461 @@
+<!Doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Yumin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+          rel="stylesheet" 
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+          crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+        body{
+            font-family:'Playfair Display', serif;
+           /* text-align : center; */
+            margin : 0;
+        }
+        .main-header{
+            background-color : #fafafa;
+            padding : 20px 0;
+            text-align : center;
+        }
+        .header-menu{
+            display : flex;
+            align-items : center;
+            justify-content: center;
+        }
+        .logo{
+            font-size : 28px;
+            margin : 0 320px;
+        }
+        .logo a{
+            text-decoration : none;
+            color : rgb(50, 50, 50);
+        }
+        .header-links {
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            list-style : none;
+            padding : 0;
+            margin : 0;
+            display : flex;
+            gap : 60px;
+        }
+        .header-item {
+            position : relative;  /* 팝업 메뉴를 글자 바로 아래에 나오게 한다. */
+        }
+        .header-links a{
+            text-decoration : none;  /* 링크의 밑줄을 제거한다. */
+            color : black;
+        }
+
+
+
+
+        /* Shop의 팝업 메뉴 스타일 */
+        .popup-style-shop{
+            position : absolute;
+            top : 250%;
+            left : 50%;
+            transform : translate(-10%);
+            background-color : white;
+            border : 1px solid #b8b8b8;
+            padding : 45px;
+            visibility : hidden;  /* 팝업창을 숨기는 기능 (0.3초) */
+            opacity : 0;  /* 팝업창을 투명도 0으로 설정 (0.3초) */
+            transition : visibility 0.3s, opacity 0.3s ease; /* 위의 두 기능들의 시간 설정. */
+            display: grid;
+            grid-template-columns : 1fr 1fr 1fr; /* 3개의 열을 만든다. */
+            gap : 10px;
+            z-index: 1000;  /* 다른 요소들보다 이 팝업창이 맨 위로 올라오게 함 */
+            text-align:left;
+        }
+        .popup-style-shop ul{
+            list-style : none;
+            padding : 0;
+            margin : 0;
+            font-size: 13px;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        .popup-style-shop li a{
+            display : block;
+            padding : 12px 110px;
+            color : black;
+        }
+        .popup-style-shop li a:hover{    /* :hover은 사용자가 마우스 커서를 특정 요소 위에 올렸을 떄 적용 되는 스타일. */
+            background-color : white;
+        }
+        .header-item:hover .popup-style-shop {
+            visibility : visible;  /* 마우스 커서를 올렸을 때 팝업 메뉴가 보이도록 함. */
+            opacity : 1;
+        }
+
+
+
+
+
+        /* Search의 메뉴 스타일 */
+        .popup-style-search{
+            position : absolute;
+            top : 250%;
+            left : 50%;
+            transform : translate(-50%);  /* 가운데 정렬 */
+            background-color : white;
+            border : 1px solid #b8b8b8;
+            padding : 45px;
+            visibility : hidden;  /* 팝업창을 숨기는 기능 (0.3초) */
+            opacity : 0;  /* 팝업창을 투명도 0으로 설정 (0.3초) */
+            transition : visibility 0.3s, opacity 0.3s ease; /* 위의 두 기능들의 시간 설정. */
+            z-index: 1000;  /* 팝업창 중 맨 위로 올라오게 함 */
+        }
+        .popup-style-search ul{
+            list-style : none;
+            padding : 0;
+            margin : 0;
+            font-size: 13px;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        .popup-style-search li a{
+            display : block;
+            padding : 14px 60px;
+            color : black;
+        }
+        .popup-style-search li a:hover{    /* :hover은 사용자가 마우스 커서를 특정 요소 위에 올렸을 떄 적용 되는 스타일. */
+            background-color : white;
+        }
+        .header-item:hover .popup-style-search {
+            visibility : visible;  /* 마우스 커서를 올렸을 때 팝업 메뉴가 보이도록 함. */
+            opacity : 1;
+        }
+
+
+        .ml{
+            display : block;
+            font-size : 20px;
+            font-weight : 500;
+            margin-left : -300px;
+        }
+
+        .square{
+            position : fixed;
+            bottom : 0%;
+            right: 79%;
+            width : 250px;
+            height : 250px;
+            background-color : white;
+            padding : 25px;
+            border : 1px solid rgb(228, 227, 227);
+            font-size : 14px;
+            text-align : left;
+        }
+        .closeBT{
+            background-color : white;
+            border : none;
+            padding-left: 97%;
+        }
+        .popup-style-shop a:hover{
+            color : rgb(181, 181, 181);
+        }
+        .popup-style-search a:hover{
+            color : rgb(181, 181, 181); 
+        }
+        /* 상품 정보란 스타일 */
+        .product-info {
+            padding-left: 30px; /* 이미지와 텍스트 사이 간격 */
+            text-align : left;
+        }
+        .knitTitle {
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: 22px;
+            font-weight: 500;
+        }
+        .knitPrice {
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        /* 색상 선택 */
+        .option-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .option-btn {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px 15px;
+            font-size: 13px;
+            text-align: center;
+            width: auto;
+            min-width : 80px;  /* 최소 너비 설정 */
+            cursor: pointer;
+        }
+        .product-info .form-select {
+            width: 120px; /* 너비 120px (수량 선택기와 동일하게) */
+            height: 40px;
+            font-size: 14px;
+            padding: 0 10px;
+        }
+        .option-btn.active {
+            background-color: #343a40; /* 어두운 배경 (선택됨) */
+            border-color: #343a40;
+            color: white;
+        }
+        .option-btn:hover:not(.active) {
+            background-color: #e9ecef; /* 마우스 올렸을 때 */
+        }
+
+
+        .container .col-md-7 img {
+            max-width: 70%; /* 이미지를 원래 크기의 70%로 줄인다 */
+            height: auto;
+            display: block;
+            margin: 0 auto; /* 이미지를 가로로 가운데 정렬 */
+        }
+        
+        /* 수량 선택 */
+        .quantity-selector {
+            display: flex;
+            border: 1px solid #ccc;
+            width: 120px;
+            height: 40px;
+        }
+        .quantity-btn, .quantity-input {
+            width: 40px;
+            text-align: center;
+            border: none;
+            background-color: white;
+            padding: 0;
+            font-size: 16px;
+        }
+        .quantity-btn {
+            cursor: pointer;
+        }
+        .quantity-input {
+            border-left: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+        }
+        
+        /* 최종 가격 */
+        .total-price {
+            font-size: 20px;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        /* 구매 버튼 */
+        .btn-dark {
+            border-radius: 0; /* 각진 모서리 */
+            text-transform: uppercase; /* 대문자 */
+            font-weight: 700;
+            padding: 12px;
+        }
+
+        .spacing-box{
+            padding-bottom:600px;
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-menu">
+            <ul class="header-links">
+                <li class="header-item">
+                    <a href="/shop">Shop</a>
+                    <div class="popup-style-shop">
+                        <ul>
+                            <li><a href="/outer"><b>•OUTER</b></a></li>
+                            <li><a href="/allouter">All</a></li>
+                            <li><a href="/coat">Coat</a></li>
+                            <li><a href="/cardigan">Cardigan</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="/top"><b>•TOP</b></a></li>
+                            <li><a href="/alltop">All</a></li>
+                            <li><a href="/knit">Knit</a></li>
+                            <li><a href="/shirt">Shirt</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="/bottom"><b>•BOTTOM</b></a></li>
+                            <li><a href="/pant">Pant</a></li><br>
+                            <li><a href="/shoes">Shoes</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="header-item">
+                    <a href="/search">Search</a>
+                    <div class="popup-style-search">
+                        <ul>
+                            <li><a href="/new">New</a></li>
+                            <li><a href="/best">Best</a></li>
+                            <li><a href="/sale">Sale</a></li>
+                        </ul>
+                    </div>
+                    </li>
+                </li>
+            </ul>
+            <span class="logo"><a href="/">y u m i n</a></span>
+            <ul class="header-links">
+                <li><a href="/login">Login</a></li>
+                <li><a href="/order">Order</a></li>
+                <li><a href="/cart">Cart</a></li>
+            </ul>
+        </div>
+    </header>
+    <br><br><br><br>
+
+    <div class="container my-5">  <!-- container : 내용물을 감싸며, 가운데 정렬한다.
+                                        my-5 : 바깥쪽 여백을 주는 명령어로, m(margin) y(y축) 5(0~5까지의 여백 크기 (5가 가장 큼))-->
+        <div class="row">
+
+            <div class="col-md-7"> <!-- col(열) md(중간 크기) 7 (12칸 중 7칸 차지)-->
+                <img src="/images/knit3.jpg" class="img-fluid" alt="Sofia Wool Cardigan">
+            </div>
+
+            <div class="col-md-5 product-info">
+                
+                <p class="knitTitle">Wool Cardigan</p>
+                <p class="knitPrice">₩69,000</p>
+                
+                <hr class="my-4">
+                <p>캐시어 울 혼방소재로 제작되어 부드럽고 포근한 터치감의 니트입니다. 베이직한 디자인에 유광 로고 자수 클래식한 느낌을 더해줍니다.</p>
+
+                <br>
+                <div class="mb-4">
+                    <label class="form-label">color</label>
+                    <div class="option-btn-group">
+                        <button type="button" class="option-btn">IVORY</button>
+                        <button type="button" class="option-btn active">GREY</button>
+                        <button type="button" class="option-btn">BLACK</button>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Size</label>
+                    <select class="form-select">
+                        <option>XS(85)</option>
+                        <option selected>S(90)</option>
+                        <option>M(95)</option>
+                        <option>L(100)</option>
+                        <option>XL(105)</option>
+                    </select>
+                </div>
+
+                <hr class="my-4">
+                <div class="mb-4">   <!-- m(바깥쪽 여백) b (bottom 아래쪽에) 4(여백의 크기는 4)-->
+                    <div class="quantity-selector">
+                        <button type="button" class="quantity-btn">-</button>
+                        <input type="text" class="quantity-input" value="1" readonly>
+                        <button type="button" class="quantity-btn">+</button>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <span>TOTAL</span>
+                    <span class="total-price">₩0</span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-dark w-100">ADD TO CART</button>
+                    <button type="button" class="btn btn-dark w-100">BUY IT NOW</button>
+                </div>
+
+            </div> </div> </div> <div class="spacing-box"></div>
+            <div class="text-center">사업자 정보 &nbsp; | &nbsp; 010-4205-3932 &nbsp; | &nbsp; ymin0207@naver.com</div>
+    <br><br><br>
+
+    <div class="square">
+        <button class="closeBT">X</button><br>
+        [NOTICE]<br><br>
+       <p>•Welcome Coupon<br>
+        첫 구매 20% off </p><br>
+        <p>•Birthday Coupon <Br>
+           생일 고객 30% off</p>
+    </div>
+
+
+
+<script>
+
+    const basePrice = 69000;  // 니트의 기본 가격(69000) 상품가격저장.
+    
+    // 요소 참조
+    const square = document.querySelector('.square');
+    const closeBT = document.querySelector('.closeBT');
+    const colorButtons = document.querySelectorAll('.option-btn');  // 색상 선택 기능, 모든 색상 버튼(.option-btn)들을 찾아서 변수에 담는다.
+    
+    // 수량 관련 요소 참조
+    const quantityInput = document.querySelector('.quantity-input');   // 수량 입력 변수
+    const quantityBtns = document.querySelectorAll('.quantity-btn'); // 모든 수량 버튼 (-, +)
+    const totalPriceSpan = document.querySelector('.total-price');  // 총 가격 변수
+
+
+    /* 메인페이지 팝업창의 닫기 버튼 기능 */
+
+    closeBT.addEventListener('click', () => {
+        square.style.display = 'none';
+    });
+
+
+
+    // 각 버튼에 click 이벤트 감지기를 추가한다.
+    colorButtons.forEach(button => {
+        button.addEventListener('click', () => {  // addEvnetListener() : 버튼 요소에 클릭이 발생했을 떄, 실행할 함수를 등록하는 메서드.
+            
+            // 초기화 시키기 위해 어떤 버튼이든 클릭되면, 우선 모든 버튼에서 active 클래스를 제거한다.
+            colorButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            //클릭된 버튼에만 active 클래스를 추가한다.
+            button.classList.add('active');
+        });
+    });
+
+
+    //총 가격 계산 기능
+    function updateTotal() {
+        const quantity = parseInt(quantityInput.value); // 현재 수량
+        const total = basePrice * quantity; // 총 가격 계산  (총가격 = 기본가격(69000) * 수량)
+
+        // '₩69,000' 형식으로 변환하여 표시 (toLocaleString : 3자리마다 콤마를 찍어줌)
+        totalPriceSpan.textContent = '₩' + total.toLocaleString('ko-KR');
+    }
+
+    // 수량 버튼 이벤트 리스너
+    quantityBtns.forEach(button => {
+        button.addEventListener('click', () => {
+            let currentQuantity = parseInt(quantityInput.value);
+            
+            if (button.textContent === '+') {
+                // 수량 증가 (최대 10개로 제한)
+                if (currentQuantity < 10) {
+                    currentQuantity++;
+                }
+            } else if (button.textContent === '-') {
+                // 수량 감소 (최소 1개로 제한)
+                if (currentQuantity > 1) {
+                    currentQuantity--;
+                }
+            }
+            
+            // 변경된 수량을 입력칸에 등록.
+            quantityInput.value = currentQuantity;
+            
+            // 총 가격 업데이트
+            updateTotal();
+        });
+    });
+
+    // 페이지 로드 시 초기 총 가격 설정
+    updateTotal();
+    </script>
+
+</body>
+</html>

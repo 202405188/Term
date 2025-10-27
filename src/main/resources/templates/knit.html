@@ -1,0 +1,330 @@
+<!Doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Yumin</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+        body{
+            font-family:'Playfair Display', serif;
+            text-align : center;
+            margin : 0;
+        }
+        .main-header{
+            background-color : #fafafa;
+            padding : 20px 0;
+        }
+        .header-menu{
+            display : flex;
+            align-items : center;
+            justify-content: center;
+        }
+        .logo{
+            font-size : 28px;
+            margin : 0 320px;
+        }
+        .logo a{
+            text-decoration : none;
+            color : rgb(50, 50, 50);
+        }
+        .header-links {
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            list-style : none;
+            padding : 0;
+            margin : 0;
+            display : flex;
+            gap : 60px;
+        }
+        .header-item {
+            position : relative;   /* 팝업 메뉴를 글자 바로 아래에 나오게 한다. */
+        }
+        .header-links a{
+            text-decoration : none;   /* 링크의 밑줄을 제거한다. */
+            color : black;
+        }
+
+
+
+
+        /* Shop의 팝업 메뉴 스타일 */
+        .popup-style-shop{
+            position : absolute;
+            top : 250%;
+            left : 50%;
+            transform : translate(-10%);
+            background-color : white;
+            border : 1px solid #b8b8b8;
+            padding : 45px;
+            visibility : hidden;   /* 팝업창을 숨기는 기능 (0.3초) */
+            opacity : 0;   /* 팝업창을 투명도 0으로 설정 (0.3초) */
+            transition : visibility 0.3s, opacity 0.3s ease; /* 위의 두 기능들의 시간 설정. */
+            display: grid;
+            grid-template-columns : 1fr 1fr 1fr; /* 3개의 열을 만든다. */
+            gap : 10px;
+            z-index: 1000;   /* 다른 요소들보다 이 팝업창이 맨 위로 올라오게 함 */
+        }
+        .popup-style-shop ul{
+            list-style : none;
+            padding : 0;
+            margin : 0;
+            font-size: 13px;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        .popup-style-shop li a{
+            display : block;
+            padding : 12px 110px;
+            color : black;
+        }
+        .popup-style-shop li a:hover{     /* :hover은 사용자가 마우스 커서를 특정 요소 위에 올렸을 떄 적용 되는 스타일. */
+            background-color : white;
+        }
+        .header-item:hover .popup-style-shop {
+            visibility : visible;   /* 마우스 커서를 올렸을 때 팝업 메뉴가 보이도록 함. */
+            opacity : 1;
+        }
+
+
+
+
+
+        /* Search의 메뉴 스타일 */
+        .popup-style-search{
+            position : absolute;
+            top : 250%;
+            left : 50%;
+            transform : translate(-50%);  /* 가운데 정렬 */
+            background-color : white;
+            border : 1px solid #b8b8b8;
+            padding : 45px;
+            visibility : hidden;   /* 팝업창을 숨기는 기능 (0.3초) */
+            opacity : 0;   /* 팝업창을 투명도 0으로 설정 (0.3초) */
+            transition : visibility 0.3s, opacity 0.3s ease; /* 위의 두 기능들의 시간 설정. */
+            z-index: 1000;   /* 팝업창 중 맨 위로 올라오게 함 */
+        }
+        .popup-style-search ul{
+            list-style : none;
+            padding : 0;
+            margin : 0;
+            font-size: 13px;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        .popup-style-search li a{
+            display : block;
+            padding : 14px 60px;
+            color : black;
+        }
+        .popup-style-search li a:hover{     /* :hover은 사용자가 마우스 커서를 특정 요소 위에 올렸을 떄 적용 되는 스타일. */
+            background-color : white;
+        }
+        .header-item:hover .popup-style-search {
+            visibility : visible;   /* 마우스 커서를 올렸을 때 팝업 메뉴가 보이도록 함. */
+            opacity : 1;
+        }
+        .spacing-box{
+            padding-bottom:600px;
+        }
+
+        #list1-box{
+            position : fixed;
+            top : 25%;
+            left : 5%;
+            display : flex;
+            align-items : center;
+            justify-content : center;
+        }
+        .list1 a{
+            text-decoration : none;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size : 13px;
+            color : rgb(25, 25, 25);
+        }
+        .list1 ul{
+            list-style : none;
+            margin : 0;
+            padding : 0;
+        }
+        .list1 li{
+            padding : 3px;
+        }
+        .list1 a:hover{   /* 마우스 커서를 올렸을 때를 감지하여 글자 색을 회색으로 바꾼다. */
+            color : rgb(181, 181, 181);
+        }
+        
+
+
+
+        #list2-box{
+            position : fixed;
+            top : 23%;
+            left : 15%;
+            display : flex;
+            align-items : center;
+            justify-content : center;
+        }
+        .list2 a{
+            text-decoration : none;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size : 13px;
+            color : rgb(25, 25, 25);
+        }
+        .list2 ul{
+            list-style : none;
+            margin : 0;
+            padding : 0;
+        }
+        .list2 li{
+            padding : 19px;
+        }
+        .list2 a:hover{   /* 마우스 커서를 올렸을 때를 감지하여 글자 색을 회색으로 바꾼다. */
+            color : rgb(181, 181, 181);
+        }
+        .knit{
+            font-family : 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            margin-left : -500px;
+            font-size : 14px;
+        }
+
+        .cloth-box{
+            display : flex;
+            margin-left : 380px;
+            gap : 5px;
+            margin-top : 20px;
+        }
+
+        .allCloth1{
+            font-family : 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size : 14px;
+            display : flex;
+            flex-direction : column;
+        }
+        .allCloth1 figure{
+            margin-bottom : 80px;
+        }
+        .allCloth2{
+            font-family : 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size : 14px;
+            display : flex;
+            flex-direction : column;
+        }
+        .allCloth2 figure{
+            margin-bottom : 80px;
+        }
+        .popup-style-shop a:hover{
+            color : rgb(181, 181, 181);
+        }
+        .popup-style-search a:hover{
+            color : rgb(181, 181, 181); 
+        }
+
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-menu">
+            <ul class="header-links">
+                <li class="header-item">
+                    <a href="Shop.html">Shop</a>
+                    <div class="popup-style-shop">
+                        <ul>
+                            <li><a href="#"><b>•OUTER</b></a></li>
+                            <li><a href="#">All</a></li>
+                            <li><a href="#">Coat</a></li>
+                            <li><a href="#">Cardigan</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="#"><b>•TOP</b></a></li>
+                            <li><a href="#">All</a></li>
+                            <li><a href="#">Knit</a></li>
+                            <li><a href="#">Shirt</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="#"><b>•BOTTOM</b></a></li>
+                            <li><a href="#">Pants</a></li><Br>
+                            <li><a href="shoes.html">Shoes</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="header-item">
+                    <a href="Search.html">Search</a>
+                    <div class="popup-style-search">
+                        <ul>
+                            <li><a href="new.html">New</a></li>
+                            <li><a href="best.html">Best</a></li>
+                            <li><a href="sale.html">Sale</a></li>
+                        </ul>
+                    </div>
+                    </li>
+                </li>
+            </ul>
+            <span class="logo"><a href="main.html">y u m i n</a></span>
+            <ul class="header-links">
+                <li><a href="Login.html">Login</a></li>
+                <li><a href="Order.html">Order</a></li>
+                <li><a href="Cart.html">Cart</a></li>
+            </ul>
+        </div>
+    </header>
+    <div id="list1-box">
+    <div class="list1">
+        <ul>
+            <li><a href="outer.html"><b>•OUTER</b></a></li>
+            <li><a href="Allouter.html">All</a></li>
+            <li><a href="coat.html">Coat</a></li>
+            <li><a href="cardigan.html">Cardigan</a></li><br><br>
+        </ul>
+        <ul>
+            <li><a href="top.html"><b>•TOP</b></a></li>
+            <li><a href="all.html">All</a></li>
+            <li><a href="knit.html">Knit</a></li>
+            <li><a href="shirt.html">Shirt</a></li><br><br>
+        </ul>
+        <ul>
+            <li><a href="bottom.html"><b>•BOTTOM</b></a></li>
+            <li><a href="pant.html">Pant</a></li><br>
+            <li><a href="shoes.html">Shoes</a></li>
+        </ul>
+    </div>
+    </div>
+
+
+    <div id="list2-box">
+    <div class="list2">
+        <ul>
+            <li><a href="new.html">•new</a></li>
+            <li><a href="best.html">•best</a></li>
+            <li><a href="sale.html">•sale</a></li><br><br>
+        </ul>
+    </div>
+    </div>
+
+
+
+    <br><br><Br>
+    <span class="knit">knit ></span><br><br>
+
+    <div class="cloth-box">
+    <div class="allCloth1">
+    <figure><a href="/knit1"><img src="/images/knit3.jpg" height="430" width="400"><figcaption>knit &nbsp;&nbsp; ₩49,000</a></figcaption></figure>
+    <figure><img src="/images/knit7.jpg" height="430" width="400"><figcaption>knit &nbsp;&nbsp; ₩49,000</figcaption></figure>
+    <figure><img src="/images/knit8.jpg" height="430" width="400"><figcaption>knit &nbsp;&nbsp; ₩49,000</figcaption></figure>
+    <figure><img src="/images/knit9.jpg" height="430" width="400"><figcaption>knit &nbsp;&nbsp; ₩49,000</figcaption></figure>
+    </div>
+
+    <div class="allCloth2">
+    <figure><img src="/images/knit6.jpg" height="430" width="400"><figcaption>knit &nbsp;&nbsp; ₩49,000</figcaption></figure>
+    <figure><img src="/images/knit5.jpg" height="430" width="400"><figcaption>knit &nbsp;&nbsp; ₩49,000</figcaption></figure>
+    <figure><img src="/images/knit2.jpg" height="430" width="400"><figcaption>knit &nbsp;&nbsp; ₩49,000</figcaption></figure>
+    <figure><img src="/images/knit4.jpg" height="430" width="400"><figcaption>knit &nbsp;&nbsp; ₩49,000</figcaption></figure>
+    </div>
+    </div>
+
+    
+    <div class="spacing-box"></div>
+    사업자 정보 &nbsp; | &nbsp; 010-4205-3932 &nbsp; | &nbsp; ymin0207@naver.com
+    <br><br><br>
+
+
+</body>
+</html>
