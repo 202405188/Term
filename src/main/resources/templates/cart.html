@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Yumin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+          rel="stylesheet" 
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+          crossorigin="anonymous">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
         body{
@@ -122,48 +126,6 @@
         }
 
 
-        .ml{
-            display : block;
-            font-size : 20px;
-            font-weight : 500;
-            margin-left : -300px;
-        }
-        .ctgr{
-            font-size : 23px;
-            font-weight : 500;
-        }
-        .picture1{
-            display : flex;
-            flex-direction : column;  /* 세로로 방향으로 정렬 */
-            align-items : center;    /* 수평 기준으로 가운데 정렬 */
-            gap : 130px;
-        }
-        .picture2{
-            display: grid;   /* picture2 박스를 격자 형태로 만들기 */
-            grid-template-columns : 1fr 1fr;  /* 가로로 똑같은 크기의 칸을 2개 만들기 */
-            gap : 100px;
-            justify-items : center;
-        }
-        .picture2 figure{
-            text-align : center;   /* 이미지와 글자를 가운데 정렬 */
-            margin : 0;
-        }
-
-        .spacing-box{
-            padding-bottom:600px;
-        }
-
-        /* 아래의 두 가지 상태가 전환되면서 요소가 아래에서 위로 올라오며 서서히 나타나는 효과가 됨. */
-        .scroll-pic{
-            opacity : 0;   /* 투명도 : 0 (처음에는 완전히 보이지 않게 함) */
-            transform : translateY(25px);  /* 요소를 원래 위치보다 25px 아래로 이동 */
-            transition : opacity 0.6s ease-out, transform 0.6s ease-out;
-            will-change : opacity, transform;
-        }
-        .scroll-pic.is-visible{    /* scroll-pic 요소에 is-visible 클래스 추가 */
-            opacity : 1;   /* 투명도 : 1 (요소가 점점 선명하게 보이도록 함) */
-            transform : translateY(0);   /* 아래로 25px 이동했던 요소가 다시 원래의 위치로 올라오도록 함 */
-        }
         .square{
             position : fixed;
             bottom : 0%;
@@ -185,6 +147,9 @@
         }
         .popup-style-search a:hover{
             color : rgb(181, 181, 181); 
+        }
+        .spacing-box{
+            padding-bottom:600px;
         }
 
     </style>
@@ -237,7 +202,28 @@
     </header>
     <br><br><br><br>
 
-    
+    <hr class="w-50 mx-auto">   <!-- 너비 50%, m(margin)을 x축 방향으로 auto로 설정해서 중앙배치.-->
+    <main class = "container my-5">
+        <div id="empty-cart-message" class="text-center py-5" style="display: none;"> <!-- 텍스트 중앙 정렬 / p(padding)안쪽 여백,
+                                                                    y(y축) 위쪽 안 여백과 아래쪽 안 여백, 5(크기는 5만큼)-->
+            <p class="h5">장바구니가 비어 있습니다.</p>
+        </div>
+        <div id="cart-content-container" class="row justify-content-center">
+            <div class="col-lg-10">
+                <table class="table align-middle">
+                </table>
+            </div>
+        </div>
+        <div id="summary-section" class="row justify-content-center mt-5"> <!-- mt-5 : m(margin) 바깥쪽 여백, t(top) 위쪽에만,
+                                                                            5만큼의 여백을 주기. -->
+
+        </div>
+
+    </main>
+
+
+
+    <hr class="w-50 mx-auto">
 
 
 
@@ -267,6 +253,7 @@
     closeBT.addEventListener('click', () => {
         square.style.display = 'none';
     });
+
 
     </script>
 

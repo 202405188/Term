@@ -10,7 +10,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
         
-        .w-60 {
+        .w-60 {   /* w-60은 부트스트랩에서 제공하는 유틸리티 클래스*/
             width: 60% !important;  /* 너비가 60%으로 클래스를 새로 정의*/
         }
 
@@ -297,12 +297,13 @@
     <br><br><br><br>
 
     <div class="membershipClass">
-        <form class="membershipForm" action="/join" method="POST"> 
+        <form class="membershipForm" action="/join" method="POST" th:object="${user}"> <!-- th:object="${user}"는 html 폼과
+                                                                                 서버의 java 객체를 연결시켜주는 역할. -->
 
             <div class="formst">
             <label for="ID">아이디</label>
             <div class="d-flex gap-2">
-                <input type="text" id="ID" name="ID" class="form-control" placeholder="(영문 대소문자/숫자 5자)" required>
+                <input type="text" id="ID" name="username" class="form-control" placeholder="(영문 대소문자/숫자 5자)" required>
                 <button type="button" id="idCheckBtn" class="btn" style="background-color: #474747; border-color: #474747;
                 color: white; width: 120px; height:25px; font-size:12px;">중복 확인</button>
             </div>
@@ -311,7 +312,7 @@
 
             <div class="formst">
                 <label for="PWD">비밀번호</label>
-                <input type="password" id="PWD" name="PWD" placeholder="(영문 대소문자/숫자 4자~16자)" required>
+                <input type="password" id="PWD" name="password" placeholder="(영문 대소문자/숫자 4자~16자)" required>
             </div>
 
             <div class="formst">
@@ -327,7 +328,7 @@
             <div class="formst">
                 <label for="phone">휴대전화</label>
                 <div class="phoneGroup">
-                    <select id="phone1" name="phone1">
+                    <select id="phone1" name="phone1_temp">
                         <option value="010" selected>010</option>
                         <option value="011">011</option>
                         <option value="016">016</option>
@@ -336,9 +337,10 @@
                         <option value="019">019</option>
                     </select>
                     <span class="hyphen">-</span>
-                    <input type="text" id="phone2" name="phone2" maxlength="4"> 
+                    <input type="text" id="phone2" name="phone2_temp" maxlength="4"> 
                     <span class="hyphen">-</span>
-                    <input type="text" id="phone3" name="phone3" maxlength="4">
+                    <input type="text" id="phone3" name="phone3_temp" maxlength="4">
+                    <input type="hidden" id="phoneNumber" name="phoneNumber">
                 </div>
             </div>
 
@@ -398,9 +400,9 @@
             </div><br>
 
             <div class="formst d-flex justify-content-center">
-                <input type="submit" 
-                       value="Join" 
-                       class="btn btn-dark w-60">
+                <input type="submit"
+                       value="Join"
+                       class="btn btn-dark w-60"> <!-- 너비 60%-->
             </div>
             
         </form> </div>
@@ -409,6 +411,9 @@
     사업자 정보 &nbsp; | &nbsp; 010-4205-3932 &nbsp; | &nbsp; ymin0207@naver.com
     <br><br><br>
 
+
+
+    
     <script>
         const agreeAll = document.getElementById('agree-all');
         // '전체 동의' 체크박스 제외한 모든 개별 체크박스
@@ -461,9 +466,11 @@
                 const response = await fetch('/join/check-id', {  // await : 서버가 응답할때까지 기다림.
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Content-Type': 'application/x-www-form-urlencoded',   // 사용자가 서버에게 보내는 데이터가 웹 폼 형식으로 인코딩 된 데이터라는 뜻이다.
                     },
                     body: 'ID=' + encodeURIComponent(userId)  // id라는 이름으로 사용자가 입력한 userId 값을 서버에 보냄.
+                                                                // encodeURIComponent(userId) : 이 함수는 사용자의 id에 특수문자나 공백이 추가되었을 경우
+                                                                // 전송을 위해 url 인코딩을 한다.
                 });
 
                 // 서버로부터 JSON 응답을 받음  (json : 데이터를 주고 받을 떄 사용하는 텍스트 형식, key, value 형태의 데이터.)
@@ -500,6 +507,13 @@
         // 폼에서 join 버튼을 클릭할 떄마다 내부의 함수를 실행하도록 함.
         form.addEventListener('submit', function(event) {
             
+            // 나뉘어서 입력 받은 휴대전화 번호 합치기
+            const phone1 = document.getElementById('phone1').value;
+            const phone2 = document.getElementById('phone2').value;
+            const phone3 = document.getElementById('phone3').value;
+            const fullPhoneNumber = phone1 + phone2 + phone3;
+            document.getElementById('phoneNumber').value = fullPhoneNumber;
+            
             // 아이디 길이 검사 - 아이디의 길이가 5자 이상이 조건이니까, idInput이 5자 미만일 때, 아래의 경고창을 띄운다.
             if (idInput.value.length < 5) {    // 아이디의 길이가 5 미만이면.
                 alert('아이디는 5자 이상 입력해주세요.');   // alert() : 사용자에게 경고창을 띄움
@@ -533,7 +547,8 @@
                 return;
             }
             
-            // 모든 검사를 통과하면 폼이 정상적으로 제출됨 (action="/join")
+            // 모든 검사를 통과하면 폼이 정상적으로 제출됨
+            (action="/join")
         });
 
 

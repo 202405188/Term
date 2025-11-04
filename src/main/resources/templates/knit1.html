@@ -421,7 +421,7 @@
 
     //총 가격 계산 기능
     function updateTotal() {
-        const quantity = parseInt(quantityInput.value); // 현재 수량
+        const quantity = parseInt(quantityInput.value); // 현재 수량, parseInt : 문자열을 가져와서 정수로 변환하는 역할.
         const total = basePrice * quantity; // 총 가격 계산  (총가격 = 기본가격(69000) * 수량)
 
         // '₩69,000' 형식으로 변환하여 표시 (toLocaleString : 3자리마다 콤마를 찍어줌)
@@ -434,7 +434,7 @@
             let currentQuantity = parseInt(quantityInput.value);
             
             if (button.textContent === '+') {
-                // 수량 증가 (최대 10개로 제한)
+                // 수량 증가 (구매 가능 개수 최대 10개로 제한)
                 if (currentQuantity < 10) {
                     currentQuantity++;
                 }
